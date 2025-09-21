@@ -1,8 +1,8 @@
 const express = require('express');
 const morgan = require('morgan');
-//Falta el require('dotenv').config();
 
-const {StatusCodes} = require('http-status-codes');//Esto va acá?
+require('dotenv').config();
+
 
 const { loggerMiddleware } = require('./middlewares/logger.middleware');
 const { authMiddleware } = require('./middlewares/auth.middleware');
@@ -24,8 +24,7 @@ app.use(morgan('dev')); // Middleware de registro de solicitudes HTTP
 
 
 
-// Rutas públicas
-
+app.use("/public", publicRouter);
 
 
 
@@ -44,3 +43,14 @@ app.use("/v1", privateRouter);
   try {} catch (error) {} // Falta implementar
 })
 
+
+app.listen(port, () => {
+  console.log("Server started on port " + port );
+}) ;
+
+
+
+//La app inicia aca, levanta el private router que lo hace en  app.use("/v1", privateRouter)
+//Eso cae en el endpoint de router.get("/users", getAllUsers); que llama a la funcion getAllUsers
+//que esta en controllers/user.controller.js
+//y ahi se responde con un json de usuarios. Dividir para conquistar.

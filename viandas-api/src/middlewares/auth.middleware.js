@@ -12,6 +12,11 @@ const authMiddleware = (req, res, next) => {
         console.log("No hay token");
         return;
     }
+    if(token !== process.env.AUTH_SECRET_KEY){
+        res.status(StatusCodes.UNAUTHORIZED).json(createError("unauthorized", "Auth token is invalid"));
+        console.log("Token invalido");
+        return;
+    }
 }
 
 // Lógica de autenticación (ejemplo simple)
