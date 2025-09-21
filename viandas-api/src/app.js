@@ -1,13 +1,20 @@
 const express = require('express');
 const morgan = require('morgan');
+//Falta el require('dotenv').config();
 
-const {StatusCodes} = require('http-status-codes');
+const {StatusCodes} = require('http-status-codes');//Esto va acá?
 
 const { loggerMiddleware } = require('./middlewares/logger.middleware');
 const { authMiddleware } = require('./middlewares/auth.middleware');
 
+//Para lo que es swagger:
+const swagger = require('swagger-ui-express');
+const swaggerJsonDoc = require('./documentations/swagger.json');
+
 const privateRouter = require('./routes/private.router');
 const publicRouter = require('./routes/public.router');
+//Acá tienen que ir los routes de login y de signup
+//También falta la conexión de la base de datos de mongo
 
 const app = express();
 
@@ -29,9 +36,11 @@ app.listen(port, () => {
 }) 
 
 
-app.use("/v1", publicRouter);
+//Debajo de todo esto es privado--->>>
 app.use(authMiddleware);
 app.use("/v1", privateRouter);
 
-// Rutas privadas
+(async () => {
+  try {} catch (error) {} // Falta implementar
+})
 

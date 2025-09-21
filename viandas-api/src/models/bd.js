@@ -48,7 +48,7 @@ const ordermeal = [
         quantity: 2,
         deliveryDate: "2023-10-01",
         price: 700,
-        Category: "Plato principal",
+        category: "Plato principal",
     },
     {
         id: ordermealId++,
@@ -57,7 +57,7 @@ const ordermeal = [
         quantity: 1,
         deliveryDate: "2023-10-02",
         price: 800,
-        Category: "Plato principal",
+        category: "Plato principal",
     },
     {
         id: ordermealId++,
@@ -66,7 +66,7 @@ const ordermeal = [
         quantity: 3,
         deliveryDate: "2023-10-03",
         price: 750,
-        Category: "Postre",
+        category: "Postre",
     },
     {
         id: ordermealId++,
@@ -75,7 +75,7 @@ const ordermeal = [
         quantity: 1,
         deliveryDate: "2023-10-04",
         price: 400,
-        Category: "Plato principal",
+        category: "Plato principal",
     },
     {
         id: ordermealId++,
@@ -84,7 +84,7 @@ const ordermeal = [
         quantity: 2,
         deliveryDate: "2023-10-05",
         price: 600,
-        Category: "Plato principal",
+        category: "Plato principal",
     },
     {
         id: ordermealId++,
@@ -93,7 +93,7 @@ const ordermeal = [
         quantity: 1,
         deliveryDate: "2023-10-06",
         price: 450,
-        Category: "Plato principal",
+        category: "Plato principal",
     },
     {
         id: ordermealId++,
@@ -102,7 +102,7 @@ const ordermeal = [
         quantity: 2,
         deliveryDate: "2023-10-07",
         price: 1000,
-        Category: "Postre",
+        category: "Postre",
     },
 ]
 
