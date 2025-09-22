@@ -1,29 +1,108 @@
-const app = express();
+const { StatusCodes } = require('http-status-codes');
+const buildOrdermealDTOResponse = require('../dtos/ordermeal.response.js');
+const Ordermeal = require('../models/ordermeal.model');
+const { model } = require('mongoose');
 
-//ENDPOINTS
-app.get("/v1/ordermeals", (req, res) => {
-    res.status(200).json(bd.ordermeals);
-})
-
-app.get("/v1/ordermeals/:id", (req, res) => {
-    const ordermealsId = Number(req.params.id);
-    console.log(ordermealsId);
-
-    if (isNaN(ordermealsId)) {
-        res.status(400).send("Bad request" );
-        return;
+const findOrdermealById = async (ordermealId, userId) => {
+    try {
+        const ordermeal = await findOrdermealByIdInDB(ordermealId, userId);
+        return buildOrdermealDTOResponse(ordermeal);
+    }catch (error) {
+        throw error;
     }
-    const ordermeal = bd.findOrdermealById(ordermealsId);
+}
+
+const getOrdermealsByUserId = async (userId) => {
+    try {
+        const userOrdermealsDB = await Ordermeal.find({ userId: userId });
+
+        let ordermealsResponse = userOrdermealsDB.map(om => {
+            return buildOrdermealDTOResponse(om);
+        })
+
+        return ordermealsResponse;
+    }catch (e){
+        let error = new Error("Error obteniendo datos de la base");
+        error.status = "internal_servicer_error",
+            error.code = StatusCodes.INTERNAL_SERVER_ERROR;
+        throw error;
+    }
+}
+
+const deleteOrderneal = async (ordermealId, userId) => {
+    try {
+        const ordermeal = await findOrdermealByIdInDB(ordermealId, userId);
+        await ordermeal.deleteOne();
+    }catch (error) {
+        throw error;
+    }
+}
+
+const createOrdermeal = async (mealId, userId, quantity, deliveryDate, price, category) => {
+    const newOrdermeal = new Ordermeal({
+        mealId : mealId,
+        userId : userId,
+        quantity : quantity,
+        deliveryDate : deliveryDate,
+        price : price, //Ver esto!
+        category : category
+    });
+
+    try {
+        const savedOrdermeal = await newOrdermeal.save();
+        return buildOrdermealDTOResponse(savedOrdermeal);
+    } catch (e) {
+        let error = new Error("Error guardando datos en la base");
+        error.status = "internal_servicer_error",
+            error.code = StatusCodes.INTERNAL_SERVER_ERROR;
+        throw error;
+    }
+}
+
+const updateOrdermeal = async (ordermealId, userId, quantity, deliveryDate) => {
+    //Tener en cuenta que si cambia el quantity deberá cambiar el price
+    try {
+        const ordermeal = await findOrdermealByIdInDB(ordermealId, userId);
+        Object.assign(ordermeal, { quantity: quantity, deliveryDate: deliveryDate });
+        const updateOrdermeal = await ordermeal.save();
+        return buildOrdermealDTOResponse(updateOrdermeal);
+    } catch (error) {
+        throw error;
+    }
+}
+
+const findOrdermealByIdInDB = async (ordermealId, userId) => {
+    let ordermeal;
+
+    try {
+        ordermeal = await Ordermeal.findById(ordermealId);
+    }catch (e) {
+        let error = new Error("Error obteniendo datos de la base");
+        error.status = "internal_servicer_error",
+            error.code = StatusCodes.INTERNAL_SERVER_ERROR;
+        throw error;
+    }
 
     if(!ordermeal) {
-        res.status(404).send("Ordermeal not found");
-        return;
+        let error = new Error("No se encontra la vianda");
+        error.status = "not_found",
+            error.code = StatusCodes.NOT_FOUND;
+        throw error;
     }
-    res.status(200).json(ordermeal);
-});
 
+    if(ordermeal.userId.toString() !== userId) {
+        let error = new Error("No tiene permisos para ver esta vianda");
+        error.status = "forbidden",
+            error.code = StatusCodes.FORBIDDEN;
+        throw error;
+    }
+    return ordermeal;
+}
 
-const port = 3000;
-app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
-});
+module.exports = { 
+    findOrdermealById, 
+    getOrdermealsByUserId, 
+    deleteOrderneal, 
+    createOrdermeal, 
+    updateOrdermeal 
+}
