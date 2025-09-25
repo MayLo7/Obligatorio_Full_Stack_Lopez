@@ -2,11 +2,12 @@ const express = require("express");
 
 
 const router = express.Router();
-const { getAllUsers } = require("../controllers/user.controller");
+const { getAllUsers, createUser } = require("../controllers/user.controller");
 
 //Endpoint para obtener todas los usuarios
 
 router.get("/users", getAllUsers);
+router.post("/users", createUser);
 
 
 //ACA SE PONEN LAS RUTAS PRIVADAS

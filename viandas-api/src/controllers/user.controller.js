@@ -1,13 +1,13 @@
 const {createError} = require('../utils/errors');
 const { StatusCodes } = require("http-status-codes");
-const createUserSchema = require("../validators/create.user");
+const createUserSchema = require('../validators/create.user.schema');
 
 const getAllUsers = (req, res) => {
   res.status(StatusCodes.OK).json(users);
     
 }
 
-const createUSer = (req, res) => {
+const createUser = (req, res) => {
 
     const{ body } = req;
     if(!body) {
@@ -25,7 +25,7 @@ const createUSer = (req, res) => {
     // Lógica para crear el usuario
 }
 
-module.exports = { getAllUsers };
+module.exports = { getAllUsers, createUser };
 
 
 // EN VEZ DE HACER IF POR IF IMPORTO LAS VALIDACIONES DE JOI
