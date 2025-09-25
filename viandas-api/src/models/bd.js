@@ -1,6 +1,8 @@
-let mealId = 1; 
+let mealId = 1;
 let ordermealId = 1;
 let userId = 1;
+
+const bcrypt = require('bcrypt');
 
 const meal = [
     {
@@ -141,8 +143,45 @@ const user = [
     },
 ]
 
+const getUsername = username => users.find(user => user.username === username);
+
+
+const doLogin = async({ username, password }) => {
+    const user = getUsername(username);
+    if (!user) {
+        return null;
+    }
+
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+        return null;
+    }
+    return { username: user.username, email: user.email };
+}
+
+const createUser = async({ username, password, email }) => {
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+   //await bcrypt.compare(password, hashedPassword);
+
+    
+    const newUser = {
+        id: userId++,
+        username: username,
+        password: hashedPassword,
+        email: email
+    };
+    users.push(newUser);
+    return { username: newUser.username, email: newUser.email };
+}
+
+const getUserByUsername = username => users.find(u => u.username === username);
+
 const findMealById = id => meal.find(m => m.id === id);
 const findUserById = id => user.find(u => u.id === id);
 const findOrdermealById = id => ordermeal.find(om => om.id === id);
 
-module.exports = { meal, ordermeal, user, findMealById, findUserById, findOrdermealById };
+module.exports = {
+    meal, ordermeal, user, findMealById, findUserById, findOrdermealById,
+    doLogin, createUser, getUserByUsername
+};
