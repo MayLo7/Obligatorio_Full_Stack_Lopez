@@ -1,6 +1,6 @@
 const {createError} = require('../utils/errors');
 const { StatusCodes } = require("http-status-codes");
-const createUserSchema = require('../validators/create.user.schema');
+const createUserSchema = require('../validators/create.user');
 
 const getAllUsers = (req, res) => {
   res.status(StatusCodes.OK).json(users);

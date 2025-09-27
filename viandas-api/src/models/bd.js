@@ -127,7 +127,7 @@ const user = [
     },
     {
         id: userId++,
-        name: "Carlos López",
+        username: "Carlos20",
         email: "carli1989@icloud.com",
         password: "myPassword$1",
         plan: "plus",
@@ -143,45 +143,38 @@ const user = [
     },
 ]
 
-const getUsername = username => users.find(user => user.username === username);
+const getUsername = username => user.find(user => user.username === username);
 
 
-const doLogin = async({ username, password }) => {
-    const user = getUsername(username);
-    if (!user) {
-        return null;
-    }
 
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) {
-        return null;
-    }
-    return { username: user.username, email: user.email };
-}
 
-const createUser = async({ username, password, email }) => {
+/*const createUser = async({ username, password, email, plan, orderCount }) => {
 
     const hashedPassword = await bcrypt.hash(password, 10);
    //await bcrypt.compare(password, hashedPassword);
 
-    
-    const newUser = {
-        id: userId++,
+    const newUser = new User({
+       
         username: username,
         password: hashedPassword,
-        email: email
-    };
-    users.push(newUser);
-    return { username: newUser.username, email: newUser.email };
-}
+        email: email,
+        plan: plan,
+        orderCount: orderCount
+    });
 
-const getUserByUsername = username => users.find(u => u.username === username);
+    try {  const savedUser = await  newUser.save();
+    return savedUser;
+    } 
+    catch (error) {console.log("Error saving user in database", error); return null;}
+
+}*/
+
+const getUserByUsername = username => user.find(u => u.username === username);
 
 const findMealById = id => meal.find(m => m.id === id);
 const findUserById = id => user.find(u => u.id === id);
 const findOrdermealById = id => ordermeal.find(om => om.id === id);
 
 module.exports = {
-    meal, ordermeal, user, findMealById, findUserById, findOrdermealById,
-    doLogin, createUser, getUserByUsername
+    meal, ordermeal, user, findMealById, findUserById, findOrdermealById, createUser, getUserByUsername
 };

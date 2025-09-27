@@ -7,8 +7,8 @@ const { loggerMiddleware } = require('./middlewares/logger.middleware');
 const { authMiddleware } = require('./middlewares/auth.middleware');
 
 
-const swagger = require('swagger-ui-express');        // ✅
-const swaggerJsonDoc = require('./documentation/swagger.json');
+//const swagger = require('swagger-ui-express');        // ✅
+//const swaggerJsonDoc = require('./documentation/swagger.json');
 
 const privateRouter = require('./routes/users.router');
 const publicRouter = require('./routes/healht.router');
@@ -47,7 +47,7 @@ app.use("/v1", privateRouter);
         })
     } catch (error) {
         console.log("Error conectando con mongoDB", error);
-        process.exit(1);
+        process.exit(1);// hubo un error.
     }
 })();
 
