@@ -1,4 +1,4 @@
-//En la carpeta de validators.
+
 const Joi = require('joi');
 
 const loginSchema = Joi.object({

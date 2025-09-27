@@ -12,16 +12,13 @@ const authMiddleware = (req, res, next) => {
         console.log("No hay token");
         return;
     }
-    // if(token !== process.env.AUTH_SECRET_KEY){
-    //     res.status(StatusCodes.UNAUTHORIZED).json(createError("unauthorized", "Auth token is invalid"));
-    //     console.log("Token invalido");
-    //     return;
-    // }
+    
 
 
     try {
         const verifiedJWT = jwt.verify(token, process.env.JWT_AUTH_SECRET_KEY);
-        req.user = verifiedJWT;
+        req.user = verifiedJWT.userId;
+        console.log("devolucion token:", verifiedJWT);
         next();
     } catch (error) {
         res.status(StatusCodes.UNAUTHORIZED).json(createError("unauthorized", "Auth token is invalid"));

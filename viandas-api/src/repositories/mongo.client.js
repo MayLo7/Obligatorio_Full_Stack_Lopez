@@ -1,5 +1,8 @@
 const mongoose = require('mongoose');
 
+
+mongoose.set('debug', true);
+
 const connectMongoDB = async () => {
 
     const connectionURL = process.env.MONGO_DB_HOST; // Ejemplo: 'mongodb://localhost:27017'

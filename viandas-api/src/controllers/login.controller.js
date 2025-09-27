@@ -1,15 +1,11 @@
-const express = require('express');
 const { StatusCodes } = require("http-status-codes");
 const { createError } = require('../utils/errors');
 const loginSchema = require('../validators/login.schema');
-//const jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
 
 
 const userService = require('../services/user.service');
 
-//const createUserNameSchema = require('../validators/create.user');
-
-//const { doLogin } = require('../services/login.service');
 
 const login = async(req, res) => {
 
