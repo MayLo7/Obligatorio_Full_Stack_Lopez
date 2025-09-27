@@ -57,6 +57,7 @@ const registerUser = async({ username, password, email, plan, orderCount }) => {
         let e = new Error("Error saving user in database");
         e.status = "internal_server_error";
         e.code = StatusCodes.INTERNAL_SERVER_ERROR;
+        console.log(error);
         throw e;    
     }
 }

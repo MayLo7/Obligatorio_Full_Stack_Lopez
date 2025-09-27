@@ -143,38 +143,14 @@ const user = [
     },
 ]
 
-const getUsername = username => user.find(user => user.username === username);
 
 
 
 
-/*const createUser = async({ username, password, email, plan, orderCount }) => {
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-   //await bcrypt.compare(password, hashedPassword);
-
-    const newUser = new User({
-       
-        username: username,
-        password: hashedPassword,
-        email: email,
-        plan: plan,
-        orderCount: orderCount
-    });
-
-    try {  const savedUser = await  newUser.save();
-    return savedUser;
-    } 
-    catch (error) {console.log("Error saving user in database", error); return null;}
-
-}*/
-
-const getUserByUsername = username => user.find(u => u.username === username);
 
 const findMealById = id => meal.find(m => m.id === id);
 const findUserById = id => user.find(u => u.id === id);
 const findOrdermealById = id => ordermeal.find(om => om.id === id);
 
 module.exports = {
-    meal, ordermeal, user, findMealById, findUserById, findOrdermealById, createUser, getUserByUsername
-};
+ findMealById, findUserById, findOrdermealById}
