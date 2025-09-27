@@ -16,4 +16,3 @@ const logRequest = req => {
 module.exports = { logRequest };
 
 
-///NO HACE EL LOGGERC

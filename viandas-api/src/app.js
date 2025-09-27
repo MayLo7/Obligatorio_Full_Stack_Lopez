@@ -3,18 +3,32 @@ const morgan = require('morgan');
 require('dotenv').config();
 
 
+
+
 const { loggerMiddleware } = require('./middlewares/logger.middleware');
 const { authMiddleware } = require('./middlewares/auth.middleware');
+
+
 
 
 //const swagger = require('swagger-ui-express');        // ✅
 //const swaggerJsonDoc = require('./documentation/swagger.json');
 
-const privateRouter = require('./routes/users.router');
+//const privateRouter = require('./routes/users.router');
 const publicRouter = require('./routes/healht.router');
 
 const signupRouter = require('./routes/signup.router');
 const loginRouter = require('./routes/login.router');
+
+
+console.log('Routers:');
+//console.log('  privateRouter:', typeof privateRouter);
+console.log('  publicRouter :', typeof publicRouter);
+console.log('  signupRouter :', typeof signupRouter);
+console.log('  loginRouter  :', typeof loginRouter);
+
+
+
 
 const connectMongoDB = require('./repositories/mongo.client');
 
@@ -27,13 +41,16 @@ app.use(morgan('dev')); // Middleware de registro de solicitudes HTTP
 
 
 
+
+
+app.use("/public/v1", signupRouter);
+app.use("/public/v1", loginRouter);
 app.use("/public", publicRouter);
 
-app.use("/public", signupRouter);
-app.use("/public", loginRouter);
 
 app.use(authMiddleware);
-app.use("/v1", privateRouter);
+//app.use("/v1", privateRouter);
+
 
 
 (async () => {

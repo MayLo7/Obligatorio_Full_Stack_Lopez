@@ -1,20 +1,19 @@
-const express = require('express');
 const { createError } = require('../utils/errors');
 const {StatusCodes} = require('http-status-codes');
 const userService = require('../services/user.service');
-
-
 const { createUserSchema } = require('../validators/create.user');
 
 
 const signup = async (req, res) => {
     const { body } = req;
 
+
+    console.log('[signup] body:', body);
+
     if (!body) {
         res.status(StatusCodes.BAD_REQUEST).json(createError("BAD_REQUEST", "INVALID body"));
         return;
     }
-
 
 
     const { error } = createUserSchema.validate(body);
@@ -25,17 +24,14 @@ const signup = async (req, res) => {
         return;
     }
 
-    /*const userExists = getUserByUsername(body.username);
-    if (userExists) {
-        res.status(StatusCodes.CONFLICT).json(createError("CONFLICT", `Username ${body.username} already exists`));
-        return;
-    }*/
-
+   
     try {
         const newUser = await userService.registerUser(body);
         res.status(StatusCodes.CREATED).json(newUser);
 
     } catch (error) {
+
+        console.error('[signup] error:', error);
         res.status(error.code || StatusCodes.INTERNAL_SERVER_ERROR).json(createError(error.status, error.message));
     }
 }
