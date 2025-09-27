@@ -22,9 +22,7 @@ const doLogin = async({ username, password }) => {
     const token = jwt.sign({username: user.username, email: user.email, plan: user.plan, orderCount: user.orderCount, id: user._id.toString()}
         ,process.env.JWT_AUTH_SECRET_KEY, { expiresIn: '1h' });
 
-    user.token = token;
-
-
+    //user.token = token;
     
     return {token : token};
 }
@@ -38,9 +36,7 @@ const registerUser = async({ username, password, email, plan, orderCount }) => {
     } //VER QUÉ ERROR
 
     const hashedPassword = await bcrypt.hash(password, 10);
-
     const newUser = new User({
-
         username: username,
         password: hashedPassword,
         email: email,
@@ -53,7 +49,6 @@ const registerUser = async({ username, password, email, plan, orderCount }) => {
         const userDTO = buildUserDTOResponse(savedUser);
         return userDTO;
     } catch (error) {
-
         let e = new Error("Error saving user in database");
         e.status = "internal_server_error";
         e.code = StatusCodes.INTERNAL_SERVER_ERROR;
@@ -64,4 +59,4 @@ const registerUser = async({ username, password, email, plan, orderCount }) => {
 
 const getUserByUserName = async username => await User.findOne({ username: username });
 
-module.exports = { doLogin, registerUser, getUserByUserName };
+module.exports = { doLogin, registerUser};

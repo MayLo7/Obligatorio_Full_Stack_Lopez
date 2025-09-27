@@ -1,13 +1,14 @@
 const {createError} = require('../utils/errors');
 const { StatusCodes } = require("http-status-codes");
 const createUserSchema = require('../validators/create.user');
+//const { use } = require('react');
 
 const getAllUsers = (req, res) => {
   res.status(StatusCodes.OK).json(users);
     
 }
 
-const createUser = (req, res) => {
+const createUser = async (req, res) => {
 
     const{ body } = req;
     if(!body) {
@@ -22,7 +23,12 @@ const createUser = (req, res) => {
         return;
     }
 
-    // Lógica para crear el usuario
+    try {
+        const newUser = await userService.registerUser(body);
+        res.status(StatusCodes.CREATED).json(newUser);
+    }catch (error) {
+        res.status(error.code || StatusCodes.INTERNAL_SERVER_ERROR).json(createError(error.status || "internal_server_error", error.message || "Internal server error"));
+    }
 }
 
 module.exports = { getAllUsers, createUser };

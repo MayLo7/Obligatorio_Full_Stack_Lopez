@@ -7,4 +7,4 @@ const buildUserDTOResponse = user => {
     }
 }
 
-module.exports = { buildUserDTOResponse };
+module.exports = buildUserDTOResponse ;

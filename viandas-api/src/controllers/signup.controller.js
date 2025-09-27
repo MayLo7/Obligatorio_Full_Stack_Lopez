@@ -1,9 +1,6 @@
-const express = require('express');
 const { createError } = require('../utils/errors');
 const {StatusCodes} = require('http-status-codes');
 const userService = require('../services/user.service');
-
-
 const { createUserSchema } = require('../validators/create.user');
 
 
@@ -14,8 +11,6 @@ const signup = async (req, res) => {
         res.status(StatusCodes.BAD_REQUEST).json(createError("BAD_REQUEST", "INVALID body"));
         return;
     }
-
-
 
     const { error } = createUserSchema.validate(body);
 

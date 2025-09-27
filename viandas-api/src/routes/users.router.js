@@ -9,6 +9,9 @@ const { getAllUsers, createUser } = require("../controllers/user.controller");
 router.get("/users", getAllUsers);
 router.post("/users", createUser);
 
+//para editar
+//router.put("/users/:id", updateUser);
+
 
 //ACA SE PONEN LAS RUTAS PRIVADAS
 
