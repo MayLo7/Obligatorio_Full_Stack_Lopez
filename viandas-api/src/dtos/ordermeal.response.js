@@ -1,11 +1,14 @@
 const buildOrdermealResponse = ordermeal => {
     return {
+        id: ordermeal._id,
+        mealId: ordermeal.mealId,
+        mealName: ordermeal.mealName,
         quantity: ordermeal.quantity,
         deliveryDate: ordermeal.deliveryDate,
         price: ordermeal.price,
         category: ordermeal.category
-        //Tengo que devolver el nombre de la comida también
+        
     }
 }
 
-module.exports = { buildOrdermealResponse };
+module.exports = buildOrdermealResponse ;

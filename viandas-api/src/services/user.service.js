@@ -39,7 +39,7 @@ const registerUser = async ({ username, password, email, plan, orderCount }) => 
         username: username,
         password: hashedPassword,
         email: email,
-        plan: plan,
+        plan: plan,//Este tiene que ser por defecto "Plus"
         orderCount: orderCount
     });
 
@@ -59,5 +59,23 @@ const registerUser = async ({ username, password, email, plan, orderCount }) => 
 
 const getUserByUserName = async username => await User.findOne({ username: username });
 
+const findUserById = async userId => {
+    try {
+        const user = await User.findById(userId);
+        if (!user) {
+            let error = new Error("User not found");
+            error.status = "not_found";
+            error.code = StatusCodes.NOT_FOUND;
+            throw error;
+        }
+        return buildUserDTOResponse(user);
+    } catch (e) {
+        let error = new Error("Error getting user from database");
+        error.status = "internal_server_error";
+        error.code = StatusCodes.INTERNAL_SERVER_ERROR;
+        throw error;
+    }
+}
 
-module.exports = { doLogin, registerUser };
+
+module.exports = { doLogin, registerUser, findUserById };

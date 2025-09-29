@@ -16,9 +16,10 @@ const { authMiddleware } = require('./middlewares/auth.middleware');
 
 //const privateRouter = require('./routes/users.router');
 const publicRouter = require('./routes/healht.router');
-
 const signupRouter = require('./routes/signup.router');
 const loginRouter = require('./routes/login.router');
+const mealsRouter = require('./routes/meals.router');
+const ordermealsRouter = require('./routes/ordermeals.router');
 
 
 console.log('Routers:');
@@ -47,10 +48,14 @@ app.use("/public/v1", signupRouter);
 app.use("/public/v1", loginRouter);
 app.use("/public", publicRouter);
 
+//Para lista en un futuro las meals
+app.use("/v1", mealsRouter);
+
 
 app.use(authMiddleware);
 //app.use("/v1", privateRouter);
 
+app.use("/v1", ordermealsRouter);
 
 
 (async () => {

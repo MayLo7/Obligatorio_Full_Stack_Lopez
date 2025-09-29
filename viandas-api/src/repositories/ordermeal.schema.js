@@ -7,6 +7,7 @@ const ordermealSchema = new mongoose.Schema({
     deliveryDate: { type: Date, required: true },
     price: { type: Number, required: true },
     category: { type: String, required: true },
+    mealName: { type: String, required: true },
 })
 
 module.exports = ordermealSchema;

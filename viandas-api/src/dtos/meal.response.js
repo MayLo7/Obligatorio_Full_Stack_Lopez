@@ -1,8 +1,10 @@
 const buildMealResponse = meal => {
     return {
+        id: meal._id,
         name: meal.name,
-        price: meal.price
+        price: meal.price,
+        category: meal.category
     }
 }
 
-module.exports = { buildMealResponse };
+module.exports = buildMealResponse;
