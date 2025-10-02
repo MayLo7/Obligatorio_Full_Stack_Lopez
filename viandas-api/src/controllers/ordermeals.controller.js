@@ -2,6 +2,7 @@ const bd = require('../models/bd');
 const { createError } = require('../utils/error');
 const StatusCodes = require('http-status-codes');
 const createOrdermealSchema = require('../validators/create.ordermeal.schema');
+const updateOrdermealSchema = require('../validators/update.ordermeal.schema');
 
 const ordermealService = require('../services/ordermeal.service');
 
@@ -62,6 +63,13 @@ const updateOrdermeal = async (req, res) => {
 
     const ordermealId = req.params.id;
     const updateData = req.body;
+
+    const { error } = updateOrdermealSchema.validate(updateData);
+    if (error) {
+        const errorMensage = error.details[0].message;
+        res.status(StatusCodes.BAD_REQUEST).json(createError("bad_request", errorMensage));
+        return
+    }
 
     if (!updateData || Object.keys(updateData).length === 0) {
         res.status(StatusCodes.BAD_REQUEST).json(createError("bad_request", "Invalid body"));
