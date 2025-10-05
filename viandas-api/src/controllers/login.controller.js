@@ -10,7 +10,7 @@ const userService = require('../services/user.service');
 const login = async(req, res) => {
 
 
-    const { body } = req;
+    const { body } = req;   //verificamos lo que viene en el body que es donde cae la request , nos aseguramos que haya un body.
 
     if (!body) {
         res.status(StatusCodes.BAD_REQUEST).json(createError("BAD_REQUEST", "INVALID body"));

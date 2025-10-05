@@ -20,7 +20,7 @@ const signupRouter = require('./routes/signup.router');
 const loginRouter = require('./routes/login.router');
 const mealsRouter = require('./routes/meals.router');
 const ordermealsRouter = require('./routes/ordermeals.router');
-
+const usersRouter = require('./routes/users.router');
 
 console.log('Routers:');
 //console.log('  privateRouter:', typeof privateRouter);
@@ -56,6 +56,10 @@ app.use(authMiddleware);
 //app.use("/v1", privateRouter);
 
 app.use("/v1", ordermealsRouter);
+app.use("/v1", usersRouter);
+
+
+app.get('/v1/__whoami', (req, res) => res.json({ userId: req.userId, user: req.user }));//BORRAR
 
 
 (async () => {

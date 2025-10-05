@@ -1,3 +1,5 @@
+const { create } = require("../models/user.model");
+
 const buildOrdermealResponse = ordermeal => {
     return {
         id: ordermeal._id,
@@ -6,7 +8,9 @@ const buildOrdermealResponse = ordermeal => {
         quantity: ordermeal.quantity,
         deliveryDate: ordermeal.deliveryDate,
         price: ordermeal.price,
-        category: ordermeal.category
+        category: ordermeal.category,
+        created_date: ordermeal.createdAt,
+        updated_date: ordermeal.updatedAt
         
     }
 }

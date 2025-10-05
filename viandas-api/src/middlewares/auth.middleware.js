@@ -6,6 +6,9 @@ const jwt = require('jsonwebtoken');
 
 const authMiddleware = (req, res, next) => {
     const token = req.headers['authorization'];
+
+     console.log('[AUTH] header =', token);
+
     if (!token) {
 
         res.status(StatusCodes.UNAUTHORIZED).json(createError("unathorized", "Auth token was not provided"));
@@ -17,7 +20,9 @@ const authMiddleware = (req, res, next) => {
 
     try {
         const verifiedJWT = jwt.verify(token, process.env.JWT_AUTH_SECRET_KEY);
-        req.user = verifiedJWT.userId;
+
+        req.userId = verifiedJWT.userId || verifiedJWT._id || verifiedJWT.id;
+       // req.user = verifiedJWT.userId;
         console.log("devolucion token:", verifiedJWT);
         next();
     } catch (error) {

@@ -31,7 +31,7 @@ const getOrdermealsByUserId = async (userId, queryParams) => {
         }
 
         const userOrdermealsDB = await Ordermeal.find(query);
-        let ordermealsResponse = userOrdermealsDB.map(om => {
+        let ordermealsResponse = userOrdermealsDB.map(om => {  //Es como hacer un for y pushear
             return buildOrdermealDTOResponse(om);
         });
         return ordermealsResponse;

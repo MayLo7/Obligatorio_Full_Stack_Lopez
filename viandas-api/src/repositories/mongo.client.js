@@ -10,6 +10,8 @@ const connectMongoDB = async () => {
     await mongoose.connect(`${connectionURL}/${dbName}`, {
         serverSelectionTimeoutMS: 10000 //Tiempo de espera para la conexión
     });
+
+    console.log('[mongo] conectado a host:', mongoose.connection.host, 'db:', mongoose.connection.name);
 }
 
 module.exports = connectMongoDB;   

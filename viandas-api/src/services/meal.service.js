@@ -2,6 +2,32 @@ const { StatusCodes} = require('http-status-codes');
 const buildMealDTOResponse = require('../dtos/meal.response.js');
 const Meal = require('../models/meal.model');
 
+
+
+const createMeal = async (name, price, category ) => {
+   {
+    const nameM= name.trim();
+    const existe= await Meal.findOne({name:nameM});
+    if(existe){
+        let error = new Error(`Meal ${name} already exists`);
+        error.status = "conflict";
+        error.code = StatusCodes.CONFLICT;
+        throw error;
+    }
+   }
+   
+   
+   
+    const meal = new Meal({
+        name: name,
+        price: price,
+        category: category
+    });
+
+    await meal.save();
+    return buildMealDTOResponse(meal);
+}
+
 const findMealById = async (mealId) => {
     try {
         const meal = await findMealByIdInDB(mealId);
@@ -51,4 +77,4 @@ const getMealsByCategory = async (queryParams) => {
     }
 }
 
-module.exports = { findMealById, getMealsByCategory };
+module.exports = { findMealById, getMealsByCategory, createMeal };

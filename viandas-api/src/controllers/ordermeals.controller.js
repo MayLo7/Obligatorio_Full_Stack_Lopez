@@ -49,10 +49,10 @@ const createOrdermeal = async (req, res) => {
         res.status(StatusCodes.BAD_REQUEST).json(createError("bad_request", errorMensage));
         return
     }
-    const { mealId, quantity, deliveryDate, price, category } = body;
+    const { mealId, quantity, deliveryDate } = body;
 
     try {
-        const newOrdermeal = await ordermealService.createOrdermeal(mealId, req.userId , quantity, deliveryDate, price, category);
+        const newOrdermeal = await ordermealService.createOrdermeal(mealId, req.userId , quantity, deliveryDate); //OJO CAMBIE EL BODY
         res.status(StatusCodes.CREATED).json(newOrdermeal);
     }catch (error) {
         res.status(error.code || 500).json(createError(error.message, error.message));

@@ -50,7 +50,7 @@ const registerUser = async ({ username, password, email, plan, orderCount }) => 
     } catch (error) {
         console.error("Error al guardar usuario:", error);
         let e = new Error("Error saving user in database");
-        e.status = "internal_server_error LA CONCHA DE TU MADRE";
+        e.status = "internal_server_error ";
         e.code = StatusCodes.INTERNAL_SERVER_ERROR;
         console.log(error);
         throw e;
@@ -78,4 +78,38 @@ const findUserById = async userId => {
 }
 
 
-module.exports = { doLogin, registerUser, findUserById };
+
+const updateUserPlan = async (userId, newPlan) => {
+  const user = await User.findById(userId);
+  if (!user) {
+    const e = new Error('User not found');
+    e.status = 'not_found';
+    e.code = StatusCodes.NOT_FOUND;
+    throw e;
+  }
+
+  if (user.plan !== 'plus') {
+    const e = new Error('Solo se puede cambiar el plan si el usuario es Plus');
+    e.status = 'forbidden';
+    e.code = StatusCodes.FORBIDDEN;
+    throw e;
+  }
+
+  if (newPlan !== 'premium') {
+    const e = new Error('El nuevo plan debe ser "premium"');
+    e.status = 'bad_request';
+    e.code = StatusCodes.BAD_REQUEST;
+    throw e;
+  }
+
+  user.plan = String(newPlan).trim().toLowerCase();
+  const saved = await user.save();
+  return buildUserDTOResponse(saved);
+};
+
+module.exports = {
+  doLogin,
+  registerUser,
+  findUserById,
+  updateUserPlan,          
+};
