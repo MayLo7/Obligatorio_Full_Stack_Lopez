@@ -36,7 +36,7 @@ const getOrdermealsByUserId = async (userId, queryParams) => {
         });
         return ordermealsResponse;
     } catch (e) {
-        let error = new Error("Error obteniendo datos de la base");
+        let error = new Error("Error getting data from the database");
         error.status = "internal_servicer_error",
             error.code = StatusCodes.INTERNAL_SERVER_ERROR;
         throw error;
@@ -54,10 +54,19 @@ const deleteOrdermeal = async (ordermealId, userId) => {
 
 const createOrdermeal = async (mealId, userId, quantity, deliveryDate) => {
     const user = await findUserById(userId);
+    if (!validateDeliveryDate(deliveryDate)) {
+        let error = new Error("The delivery date must be between tomorrow and the next 7 days.");
+        error.status = "bad_request",
+            error.code = StatusCodes.BAD_REQUEST;
+        throw error;
+    }
+    
     if (user.plan === 'plus' || user.plan === 'Plus') {
+        console.log("Entrooooooooooooo");
         const ordersInLastMonth = await countOrdersByUserIdInLastMonth(userId);
+        console.log("Orders in last month:", ordersInLastMonth);
         if (ordersInLastMonth >= 10) {
-            let error = new Error("Ha superado el límite de viandas para su plan (10 por mes)");
+            let error = new Error("You have exceeded the order limit for your plan (10 per month)");
             error.status = "forbidden",
                 error.code = StatusCodes.FORBIDDEN;
             throw error;
@@ -81,7 +90,7 @@ const createOrdermeal = async (mealId, userId, quantity, deliveryDate) => {
         const savedOrdermeal = await newOrdermeal.save();
         return buildOrdermealDTOResponse(savedOrdermeal);
     } catch (e) {
-        let error = new Error("Error guardando datos en la base");
+        let error = new Error("Error saving data to the database");
         error.status = "internal_servicer_error",
             error.code = StatusCodes.INTERNAL_SERVER_ERROR;
         throw error;
@@ -97,7 +106,7 @@ const updateOrdermeal = async (ordermealId, userId, updateData) => {
 
         if (updateData.deliveryDate) {
             if (!validateDeliveryDate(updateData.deliveryDate)) {
-                let error = new Error("La fecha de entrega debe ser entre mañana y los próximos 7 días");
+                let error = new Error("The delivery date must be between tomorrow and the next 7 days.");
                 error.status = "bad_request",
                     error.code = StatusCodes.BAD_REQUEST;
                 throw error;
@@ -109,7 +118,7 @@ const updateOrdermeal = async (ordermealId, userId, updateData) => {
             const quantity = updateData.quantity;
 
             if (updateData.quantity <= 0) {
-                let error = new Error("La cantidad debe ser mayor a 0");
+                let error = new Error("The amount must be greater than 0");
                 error.status = "bad_request",
                     error.code = StatusCodes.BAD_REQUEST;
                 throw error;
@@ -137,21 +146,21 @@ const findOrdermealByIdInDB = async (ordermealId, userId) => {
     try {
         ordermeal = await Ordermeal.findById(ordermealId);
     } catch (e) {
-        let error = new Error("Error obteniendo datos de la base");
+        let error = new Error("Error getting data from the database");
         error.status = "internal_servicer_error",
             error.code = StatusCodes.INTERNAL_SERVER_ERROR;
         throw error;
     }
 
     if (!ordermeal) {
-        let error = new Error("No se encontra la vianda");
+        let error = new Error("The order is not found");
         error.status = "not_found",
             error.code = StatusCodes.NOT_FOUND;
         throw error;
     }
 
     if (ordermeal.userId.toString() !== userId) {
-        let error = new Error("No tiene permisos para ver esta vianda");
+        let error = new Error("You do not have permission to view this food.");
         error.status = "forbidden",
             error.code = StatusCodes.FORBIDDEN;
         throw error;
@@ -160,31 +169,44 @@ const findOrdermealByIdInDB = async (ordermealId, userId) => {
 }
 
 const countOrdersByUserIdInLastMonth = async (userId) => {
-    const today = new Date();
-    const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const currentMonth = now.getMonth();
+    
+    const firstDayOfMonth = new Date(currentYear, currentMonth, 1);
+    firstDayOfMonth.setUTCHours(0, 0, 0, 0); 
+
+    const startOfTomorrow = new Date();
+    startOfTomorrow.setUTCHours(0, 0, 0, 0); 
+    startOfTomorrow.setUTCDate(startOfTomorrow.getUTCDate() + 1); 
 
     const query = {
         userId: userId,
-        deliveryDate: { $gte: firstDayOfMonth, $lte: today }
+        deliveryDate: { $gte: firstDayOfMonth, $lte: startOfTomorrow }
     };
 
-    const orderCount = (await Ordermeal.find(query)).length;
-    //existe la alternativa de countDocuments de mongoose
+    const orderCount = await Ordermeal.countDocuments(query);
+    console.log("Order count in last month in METHOD:", orderCount);
+    console.log("First day of month:", firstDayOfMonth);
+    console.log("startOfTomorrow:", startOfTomorrow);
     return orderCount;
 }
 
 const validateDeliveryDate = (deliveryDate) => {
     const today = new Date();
+    today.setUTCHours(0, 0, 0, 0);
+
+    const yesterday = new Date();
+    yesterday.setUTCDate(yesterday.getUTCDate());
+
     const targetDate = new Date(deliveryDate);
+    targetDate.setUTCHours(0, 0, 0, 0);
 
-    today.setHours(0, 0, 0, 0);
-    targetDate.setHours(0, 0, 0, 0);
-
-    const sevenDaysFromNow = new Date();
+    const sevenDaysFromNow = new Date(today);
     sevenDaysFromNow.setHours(0, 0, 0, 0);
-    sevenDaysFromNow.setDate(sevenDaysFromNow.getDate() + 7);
+    sevenDaysFromNow.setDate(sevenDaysFromNow.getDate() + 8);
 
-    if (targetDate <= today) {
+    if (targetDate < yesterday) {
         return false;
     }
     if (targetDate > sevenDaysFromNow) {

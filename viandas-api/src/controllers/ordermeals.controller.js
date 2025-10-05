@@ -11,7 +11,7 @@ const getOrdermeals = async (req, res) => {
         let Ordermeals = await ordermealService.getOrdermealsByUserId(req.userId, req.query);
         res.status(StatusCodes.OK).json(Ordermeals);
     }catch (error) {
-        res.status(error.code || 500).json(createError(error.message, error.message));
+        res.status(error.code || 500).json(createError(error.status, error.message));
     }
 }
 
@@ -22,7 +22,7 @@ const getOrdermealById = async (req, res) => {
         const ordermeal = await ordermealService.findOrdermealById(ordermealId, req.userId);
         res.status(StatusCodes.OK).json(ordermeal);
     }catch (error) {
-        res.status(error.code || 500).json(createError(error.message, error.message));
+        res.status(error.code || 500).json(createError(error.status, error.message));
     }
 }
 
@@ -32,11 +32,12 @@ const deleteOrdermeal = async (req, res) => {
         await ordermealService.deleteOrdermeal(ordermealId, req.userId);
         res.status(StatusCodes.NO_CONTENT).send();
     }catch (error) {
-        res.status(error.code || 500).json(createError(error.message, error.message));
+        res.status(error.code || 500).json(createError(error.status, error.message));
     }
 }
 
 const createOrdermeal = async (req, res) => {
+    console.log("BODY:", req.body);
     const { body } = req;
     if (!body) {
         res.status(StatusCodes.BAD_REQUEST).json(createError("bad_request", "Invalid body"));
@@ -55,7 +56,7 @@ const createOrdermeal = async (req, res) => {
         const newOrdermeal = await ordermealService.createOrdermeal(mealId, req.userId , quantity, deliveryDate); //OJO CAMBIE EL BODY
         res.status(StatusCodes.CREATED).json(newOrdermeal);
     }catch (error) {
-        res.status(error.code || 500).json(createError(error.message, error.message));
+        res.status(error.code || 500).json(createError(error.status, error.message));
     }
 }
 
@@ -79,7 +80,7 @@ const updateOrdermeal = async (req, res) => {
         const updatedOrdermeal = await ordermealService.updateOrdermeal(ordermealId, req.userId, updateData);
         res.status(StatusCodes.OK).json(updatedOrdermeal);
     }catch (error) {
-        res.status(error.code || 500).json(createError(error.message, error.message));
+        res.status(error.code || 500).json(createError(error.status, error.message));
     }
 }
 
