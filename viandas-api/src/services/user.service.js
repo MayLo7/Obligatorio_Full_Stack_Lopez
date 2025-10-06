@@ -89,14 +89,14 @@ const updateUserPlan = async (userId, newPlan) => {
   }
 
   if (user.plan !== 'plus') {
-    const e = new Error('Solo se puede cambiar el plan si el usuario es Plus');
+    const e = new Error('Only Plus users can change their plan');
     e.status = 'forbidden';
     e.code = StatusCodes.FORBIDDEN;
     throw e;
   }
 
   if (newPlan !== 'premium') {
-    const e = new Error('El nuevo plan debe ser "premium"');
+    const e = new Error('The new plan must be premium.');
     e.status = 'bad_request';
     e.code = StatusCodes.BAD_REQUEST;
     throw e;

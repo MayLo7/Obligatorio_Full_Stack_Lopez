@@ -42,7 +42,7 @@ const findMealByIdInDB = async (mealId) => {
     try {
         meal = await Meal.findById(mealId);
     }catch (e) {
-        let error = new Error("Error obteniendo datos de la base");
+        let error = new Error("Error getting data from database");
         error.status = "internal_servicer_error",
         error.code = StatusCodes.INTERNAL_SERVER_ERROR;
         throw error;
@@ -70,7 +70,7 @@ const getMealsByCategory = async (queryParams) => {
         });
         return mealsResponse;
     } catch (e) {
-        let error = new Error("Error obteniendo datos de la base");
+        let error = new Error("Error getting data from database");
         error.status = "internal_servicer_error",
         error.code = StatusCodes.INTERNAL_SERVER_ERROR;
         throw error;
