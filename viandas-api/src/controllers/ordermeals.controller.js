@@ -1,4 +1,4 @@
-const bd = require('../models/bd');
+
 const { createError } = require('../utils/errors');
 const StatusCodes = require('http-status-codes');
 const createOrdermealSchema = require('../validators/create.ordermeal.schema');

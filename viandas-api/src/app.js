@@ -15,12 +15,13 @@ const { authMiddleware } = require('./middlewares/auth.middleware');
 //const swaggerJsonDoc = require('./documentation/swagger.json');
 
 //const privateRouter = require('./routes/users.router');
-const publicRouter = require('./routes/healht.router');
+const healthRouter = require('./routes/health.router');
 const signupRouter = require('./routes/signup.router');
 const loginRouter = require('./routes/login.router');
 const mealsRouter = require('./routes/meals.router');
 const ordermealsRouter = require('./routes/ordermeals.router');
 const usersRouter = require('./routes/users.router');
+const categoriesRouter = require('./routes/categories.router');
 
 console.log('Routers:');
 //console.log('  privateRouter:', typeof privateRouter);
@@ -46,9 +47,9 @@ app.use(morgan('dev')); // Middleware de registro de solicitudes HTTP
 
 app.use("/public/v1", signupRouter);
 app.use("/public/v1", loginRouter);
-app.use("/public", publicRouter);
+app.use("/", healthRouter);
 
-//Para lista en un futuro las meals
+
 app.use("/v1", mealsRouter);
 
 
@@ -57,9 +58,9 @@ app.use(authMiddleware);
 
 app.use("/v1", ordermealsRouter);
 app.use("/v1", usersRouter);
+app.use("/v1", categoriesRouter);
 
 
-app.get('/v1/__whoami', (req, res) => res.json({ userId: req.userId, user: req.user }));//BORRAR
 
 
 (async () => {
