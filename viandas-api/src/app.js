@@ -104,3 +104,6 @@ app.listen(port, () => {
 //Eso cae en el endpoint de router.get("/users", getAllUsers); que llama a la funcion getAllUsers
 //que esta en controllers/user.controller.js
 //y ahi se responde con un json de usuarios. Dividir para conquistar.*/
+
+
+//Version sin log
