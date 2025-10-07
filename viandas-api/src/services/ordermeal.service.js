@@ -169,26 +169,13 @@ const findOrdermealByIdInDB = async (ordermealId, userId) => {
 }
 
 const countOrdersByUserIdInLastMonth = async (userId) => {
-    const now = new Date();
-    const currentYear = now.getFullYear();
-    const currentMonth = now.getMonth();
-    
-    const firstDayOfMonth = new Date(currentYear, currentMonth, 1);
-    firstDayOfMonth.setUTCHours(0, 0, 0, 0); 
-
-    const startOfTomorrow = new Date();
-    startOfTomorrow.setUTCHours(0, 0, 0, 0); 
-    startOfTomorrow.setUTCDate(startOfTomorrow.getUTCDate() + 1); 
 
     const query = {
-        userId: userId,
-        deliveryDate: { $gte: firstDayOfMonth, $lte: startOfTomorrow }
+        userId: userId
     };
 
     const orderCount = await Ordermeal.countDocuments(query);
     console.log("Order count in last month in METHOD:", orderCount);
-    console.log("First day of month:", firstDayOfMonth);
-    console.log("startOfTomorrow:", startOfTomorrow);
     return orderCount;
 }
 

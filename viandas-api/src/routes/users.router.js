@@ -4,6 +4,6 @@ const { updateUserPlan } = require('../controllers/users.controller');
 const router = express.Router();
 
 // PUT /v1/users/:id/plan  (ruta privada)
-router.put('/users/:id/plan', updateUserPlan);
+router.put('/users/:id', updateUserPlan);
 
 module.exports = router;

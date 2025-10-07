@@ -22,6 +22,7 @@ const updateUserPlan = async (req, res) => {
 
   try {
     const updated = await userService.updateUserPlan(req.params.id, body.plan);
+    console.log("Updated user plan:", updated);
     res.status(StatusCodes.OK).json(updated);
   } catch (e) {
     res.status(e.code || 500).json(createError(e.status || 'internal_error', e.message));

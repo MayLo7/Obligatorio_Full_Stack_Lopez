@@ -80,6 +80,7 @@ const findUserById = async userId => {
 
 
 const updateUserPlan = async (userId, newPlan) => {
+    console.log("Updating user plan for userId:", userId, "to newPlan:", newPlan);
   const user = await User.findById(userId);
   if (!user) {
     const e = new Error('User not found');
