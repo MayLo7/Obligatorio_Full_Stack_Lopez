@@ -1,5 +1,6 @@
 const express = require('express');
 const morgan = require('morgan');
+const cors = require('cors');
 require('dotenv').config();
 
 
@@ -36,6 +37,7 @@ const connectMongoDB = require('./repositories/mongo.client');
 
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 app.use(loggerMiddleware);
 app.use(morgan('dev')); // Middleware de registro de solicitudes HTTP
