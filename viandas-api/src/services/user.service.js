@@ -39,7 +39,7 @@ const registerUser = async ({ username, password, email, plan, orderCount }) => 
         username: username,
         password: hashedPassword,
         email: email,
-        plan: plan,//Este tiene que ser por defecto "Plus"
+        plan: plan,
         orderCount: orderCount
     });
 
