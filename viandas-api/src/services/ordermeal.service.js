@@ -4,6 +4,8 @@ const Ordermeal = require('../models/ordermeal.model');
 const { model } = require('mongoose');
 const { findMealById } = require('./meal.service');
 const { findUserById } = require('./user.service');
+const User = require('../models/user.model');
+
 
 const findOrdermealById = async (ordermealId, userId) => {
     try {
@@ -47,6 +49,12 @@ const deleteOrdermeal = async (ordermealId, userId) => {
     try {
         const ordermeal = await findOrdermealByIdInDB(ordermealId, userId);
         await ordermeal.deleteOne();
+
+        const user = await User.findById(userId);
+        if (user && user.orderCount > 0) {
+            user.orderCount = user.orderCount - 1;
+            await user.save();
+        }
     } catch (error) {
         throw error;
     }
@@ -60,7 +68,7 @@ const createOrdermeal = async (mealId, userId, quantity, deliveryDate) => {
             error.code = StatusCodes.BAD_REQUEST;
         throw error;
     }
-    
+
     if (user.plan === 'plus' || user.plan === 'Plus') {
         console.log("Entrooooooooooooo");
         const ordersInLastMonth = await countOrdersByUserIdInLastMonth(userId);
@@ -88,6 +96,15 @@ const createOrdermeal = async (mealId, userId, quantity, deliveryDate) => {
 
     try {
         const savedOrdermeal = await newOrdermeal.save();
+        const user = await User.findById(userId);
+
+        // Si existe, sumarle 1 al contador
+        if (user) {
+            user.orderCount = user.orderCount + 1; // o user.orderCount += 1;
+            await user.save(); // guardar los cambios
+        }
+
+
         return buildOrdermealDTOResponse(savedOrdermeal);
     } catch (e) {
         let error = new Error("Error saving data to the database");
@@ -114,17 +131,45 @@ const updateOrdermeal = async (ordermealId, userId, updateData) => {
             changesToApply.deliveryDate = updateData.deliveryDate;
         }
 
-        if (updateData.quantity !== undefined) {
-            const quantity = updateData.quantity;
+        /* if (updateData.quantity !== undefined) {
+             const quantity = updateData.quantity;
 
-            if (updateData.quantity <= 0) {
+             if (updateData.quantity <= 0) {
+                 let error = new Error("The amount must be greater than 0");
+                 error.status = "bad_request",
+                     error.code = StatusCodes.BAD_REQUEST;
+                 throw error;
+             }
+             changesToApply.quantity = quantity;
+             needsRecCalcPrince = true;
+         }*/
+
+
+        if (updateData.quantity !== undefined) {
+            const newQuantity = updateData.quantity;   // cambio nombre para claridad
+
+            if (newQuantity <= 0) {
                 let error = new Error("The amount must be greater than 0");
                 error.status = "bad_request",
                     error.code = StatusCodes.BAD_REQUEST;
                 throw error;
             }
-            changesToApply.quantity = quantity;
+
+            
+            const oldQuantity = ordermeal.quantity;
+            const difference = newQuantity - oldQuantity;
+
+            changesToApply.quantity = newQuantity;
             needsRecCalcPrince = true;
+
+            
+            if (difference !== 0) {
+                const user = await User.findById(userId);
+                if (user) {
+                    user.orderCount = Math.max(0, user.orderCount + difference);
+                    await user.save();
+                }
+            }
         }
 
         if (needsRecCalcPrince) {

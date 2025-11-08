@@ -26,7 +26,7 @@ const doLogin = async ({ username, password }) => {
     return { token: token };
 }
 
-const registerUser = async ({ username, password, email, plan, orderCount }) => {
+const registerUser = async ({ username, password, email}) => {
     if (await getUserByUserName(username)) {
         let error = new Error(`Username ${username} already exists`);
         error.status = "conflict";
@@ -39,8 +39,6 @@ const registerUser = async ({ username, password, email, plan, orderCount }) => 
         username: username,
         password: hashedPassword,
         email: email,
-        plan: plan,//Este tiene que ser por defecto "Plus"
-        orderCount: orderCount
     });
 
     try {
