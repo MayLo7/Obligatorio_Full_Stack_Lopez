@@ -25,6 +25,14 @@ const signup = async (req, res) => {
 
 
     try {
+        try {
+            const value = await createUserSchema.validateAsync(req.body);
+            console.log('[signup] validated:', value);
+        } catch (error) {
+            console.error('[signup error]', error.message);
+            res.status(400).json({ error: error.message });
+            return;
+        }
         const newUser = await userService.registerUser(body);
         res.status(StatusCodes.CREATED).json(newUser);
 
