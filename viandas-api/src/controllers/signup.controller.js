@@ -1,5 +1,5 @@
 const { createError } = require('../utils/errors');
-const {StatusCodes} = require('http-status-codes');
+const { StatusCodes } = require('http-status-codes');
 const userService = require('../services/user.service');
 const { createUserSchema } = require('../validators/create.user');
 
@@ -23,12 +23,14 @@ const signup = async (req, res) => {
         return;
     }
 
-   
+
     try {
         const newUser = await userService.registerUser(body);
         res.status(StatusCodes.CREATED).json(newUser);
 
     } catch (error) {
+        console.error('[signup error]', error.message);
+        console.error('[signup stack]', error.stack);
 
         console.error('[signup] error:', error);
         res.status(error.code || StatusCodes.INTERNAL_SERVER_ERROR).json(createError(error.status, error.message));
