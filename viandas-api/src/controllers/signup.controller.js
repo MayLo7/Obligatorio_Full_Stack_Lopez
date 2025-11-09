@@ -15,10 +15,7 @@ const signup = async (req, res) => {
         return;
     }
 
-    const { value, error } = createUserSchema.validate(body, {
-        abortEarly: false,
-        stripUnknown: true
-    });
+    const { error } = createUserSchema.validate(body);
 
     if (error) {
         const errorMessage = error.details[0].message;
@@ -28,7 +25,7 @@ const signup = async (req, res) => {
 
 
     try {
-        const newUser = await userService.registerUser(value);
+        const newUser = await userService.registerUser(body);
         res.status(StatusCodes.CREATED).json(newUser);
 
     } catch (error) {
